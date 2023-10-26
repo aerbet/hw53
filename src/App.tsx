@@ -1,73 +1,64 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import TasksList from './components/TaskList';
 import NewTask from './components/NewTask';
 import './App.css';
 import removeimg from './assets/removeimg.png';
 
-interface State {
-    tasks: string[];
-    newTaskText: string;
-}
+const App: React.FC = () => {
+    const [tasks, setTasks] = useState<string[]>([
+        "Do push-ups",
+        "Don't drink coffee",
+        "Share your opinion"
+    ]);
+    const [newTaskText, setNewTaskText] = useState<string>("");
 
-class App extends Component<{}, State> {
-    state: State = {
-        tasks: [
-            "Do push-ups",
-            "Don't drink coffee",
-            "Share your opinion"
-        ],
-        newTaskText: ""
+    const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewTaskText(event.target.value);
     };
 
-    handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ newTaskText: event.target.value });
-    };
-
-    addNewTask = () => {
-        if (this.state.newTaskText) {
-            const tasksCopy = [...this.state.tasks, this.state.newTaskText];
-            this.setState({ tasks: tasksCopy, newTaskText: "" });
+    const addNewTask = () => {
+        if (newTaskText) {
+            setTasks(prevTasks => [...prevTasks, newTaskText]);
+            setNewTaskText("");
         }
     };
 
-    deleteTask = (event: React.MouseEvent<HTMLImageElement>) => {
+    const deleteTask = (event: React.MouseEvent<HTMLImageElement>) => {
         const id = parseInt(event.currentTarget.id, 10);
-        const tasksCopy = [...this.state.tasks];
-        tasksCopy.splice(id, 1);
-        this.setState({ tasks: tasksCopy });
-    }
+        setTasks(prevTasks => {
+            const tasksCopy = [...prevTasks];
+            tasksCopy.splice(id, 1);
+            return tasksCopy;
+        });
+    };
 
-    handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const message = event.target.checked ? "You've done it" : "Try next time";
         alert(message);
-    }
+    };
 
-    render() {
-        return (
-            <div className="App grid-container">
-                <NewTask
-                    text={this.state.newTaskText}
-                    onChange={this.handleTaskChange}
-                />
-                <button onClick={this.addNewTask}>Add Task</button>
+    return (
+        <div className="app">
+            <NewTask
+                text={newTaskText}
+                onChange={handleTaskChange}
+            />
+            <button onClick={addNewTask}>Add Task</button>
 
-                <div className="list-block">
-                    {this.state.tasks.map((task, key) => {
-                        return (
-                            <TasksList
-                                key={key}
-                                id={key.toString()}
-                                text={task}
-                                onClick={this.deleteTask}
-                                image={removeimg}
-                                check={this.handleCheckboxChange}
-                            />
-                        );
-                    })}
-                </div>
+            <div className="list-block">
+                {tasks.map((task, key) => (
+                    <TasksList
+                        key={key}
+                        id={key.toString()}
+                        text={task}
+                        onClick={deleteTask}
+                        image={removeimg}
+                        check={handleCheckboxChange}
+                    />
+                ))}
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default App;
