@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TasksList from './components/TaskList';
 import NewTask from './components/NewTask';
 import './App.css';
-import removeimg from './assets/removeimg.png'
+import removeimg from './assets/removeimg.png';
 
 interface State {
     tasks: string[];
@@ -37,6 +37,11 @@ class App extends Component<{}, State> {
         this.setState({ tasks: tasksCopy });
     }
 
+    handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const message = event.target.checked ? "You've done it" : "Try next time";
+        alert(message);
+    }
+
     render() {
         return (
             <div className="App grid-container">
@@ -55,6 +60,7 @@ class App extends Component<{}, State> {
                                 text={task}
                                 onClick={this.deleteTask}
                                 image={removeimg}
+                                check={this.handleCheckboxChange}
                             />
                         );
                     })}

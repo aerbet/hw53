@@ -12,11 +12,21 @@
   justify-self: end;
   cursor: pointer;
   margin-left: auto;
-  margin-bottom: 20px;
+  margin-top: -20px;
 }
 
 .task-text {
-  margin: 20px;
+  margin: 30px;
   width: 300px;
   text-align: start;
+}
+
+.newInput {
+  width: 300px;
+  height: 30px;
+}
+
+.checkBox {
+  display: inline-block;
+  margin-left: 20px;
 }
